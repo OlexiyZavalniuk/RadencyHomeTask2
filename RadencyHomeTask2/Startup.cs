@@ -11,6 +11,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+
+using Core;
+using Database;
 
 namespace RadencyHomeTask2
 {
@@ -32,6 +36,10 @@ namespace RadencyHomeTask2
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "RadencyHomeTask2", Version = "v1" });
 			});
+
+			services.AddTransient<IService, Service>();
+			services.AddDbContext<ApplicationContext>(options => options.UseInMemoryDatabase("BooksDB"));
+
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
