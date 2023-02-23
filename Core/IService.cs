@@ -13,7 +13,7 @@ namespace Core
 
 		public Task<BookWithReviews> GetBookWithReviewsByIdAsync(int id);
 
-		public Task DeleteBookAsync(int id, string key);
+		public Task DeleteBookAsync(int id);
 
 		public Task<BookOnlyId> CreateBookAsync(Book0 book);
 

@@ -58,7 +58,7 @@ namespace Core
 			};
 		}
 
-		public async Task DeleteBookAsync(int id, string key)
+		public async Task DeleteBookAsync(int id)
 		{
 			var book = new Book { BookId = id };
 			_db.Books.Attach(book);

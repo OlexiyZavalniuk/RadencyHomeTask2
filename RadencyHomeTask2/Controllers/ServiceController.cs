@@ -20,19 +20,19 @@ namespace RadencyHomeTask2.Controllers
 			_configuration = configuration;
 		}
 
-		[Route("/api/books/author={author}")]
+		[Route("/api/books")]
 		[HttpGet]
-		public async Task<IActionResult> GetAllBooksByAuthor(string author)
+		public async Task<IActionResult> GetAllBooksByAuthor([FromQuery] string order)
 		{
 			return await ExecuteActionAsync(() =>
 			{
-				return _service.GetAllBooksByAuthorAsync(author);
+				return _service.GetAllBooksByAuthorAsync(order);
 			});
 		}
 
-		[Route("/api/recommended/genre={genre}")]
+		[Route("/api/recommended")]
 		[HttpGet]
-		public async Task<IActionResult> GetTop10BooksByGenre(Genre genre)
+		public async Task<IActionResult> GetTop10BooksByGenre([FromQuery] Genre genre)
 		{
 			return await ExecuteActionAsync(() =>
 			{
@@ -40,7 +40,7 @@ namespace RadencyHomeTask2.Controllers
 			});
 		}
 
-		[Route("/api/books/id={id}")]
+		[Route("/api/books/{id:int}")]
 		[HttpGet]
 		public async Task<IActionResult> GetBookWithReviewsByIdAsync(int id)
 		{
@@ -50,18 +50,18 @@ namespace RadencyHomeTask2.Controllers
 			});
 		}
 
-		[Route("/api/books/id={id}/key={key}")]
+		[Route("/api/books/{id:int}")]
 		[HttpDelete]
-		public async Task<IActionResult> GetBookWithReviewsByIdAsync(int id, string key)
+		public async Task<IActionResult> GetBookWithReviewsByIdAsync(int id, [FromQuery] string secret)
 		{
 			return await ExecuteActionWithoutResultAsync(() =>
 			{
 				var correctKey = _configuration.GetValue<string>("Key");
-				if (key != correctKey)
+				if (secret != correctKey)
 				{
 					throw new Exception("Key not correct");
 				}
-				return _service.DeleteBookAsync(id, key);
+				return _service.DeleteBookAsync(id);
 			});
 		}
 
@@ -75,7 +75,7 @@ namespace RadencyHomeTask2.Controllers
 			});
 		}
 
-		[Route("/api/books/{id}/review")]
+		[Route("/api/books/{id:int}/review")]
 		[HttpPut]
 		public async Task<IActionResult> AddReview(int id, [FromBody] ReviewDTO review)
 		{
@@ -85,7 +85,7 @@ namespace RadencyHomeTask2.Controllers
 			});
 		}
 
-		[Route("/api/books/{id}/rate")]
+		[Route("/api/books/{id:int}/rate")]
 		[HttpPut]
 		public async Task<IActionResult> A(int id, [FromBody] RatingDTO rating)
 		{
