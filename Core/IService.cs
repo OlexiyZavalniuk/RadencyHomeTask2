@@ -12,5 +12,9 @@ namespace Core
 		public Task<IEnumerable<BookDTO>> GetAllBooksByAuthor(string author);
 
 		public Task<IEnumerable<BookDTO>> GetTop10BooksByGenre(Genre genre);
+
+		public Task<BookWithReviews> GetBookWithReviewsByIdAsync(int id);
+
+		public Task DeleteBook(int id, string key);
 	}
 }
