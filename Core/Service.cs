@@ -1,32 +1,33 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
-
-using Models;
-using Database;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+
+using Database;
+using Models;
 
 namespace Core
 {
 	public class Service : IService
 	{
 		private readonly ApplicationContext _db;
+		private readonly IMapper _mapper;
 
-		public Service(ApplicationContext appContext)
+		public Service(ApplicationContext appContext, IMapper mapper)
 		{
 			_db = appContext;
+			_mapper = mapper;
 		}
 
-		public async Task<IEnumerable<BookDTO>> GetAllBooksByAuthor(string author)
+		public async Task<IEnumerable<BookDTO>> GetAllBooksByAuthorAsync(string author)
 		{
 			var books = await _db.Books.Where(b => b.Author == author).ToArrayAsync();
 
 			return await getbooksDTO(books);
 		}
 
-		public async Task<IEnumerable<BookDTO>> GetTop10BooksByGenre(Genre genre)
+		public async Task<IEnumerable<BookDTO>> GetTop10BooksByGenreAsync(Genre genre)
 		{
 			var books = await _db.Books.Where(b => b.Genre == genre).ToArrayAsync();
 			var booksDTO = await getbooksDTO(books);
@@ -57,11 +58,51 @@ namespace Core
 			};
 		}
 
-		public async Task DeleteBook(int id, string key)
+		public async Task DeleteBookAsync(int id, string key)
 		{
 			var book = new Book { BookId = id };
 			_db.Books.Attach(book);
 			_db.Books.Remove(book);
+			await _db.SaveChangesAsync();
+		}
+
+		public async Task<BookOnlyId> CreateBookAsync(Book0 book)
+		{
+			var existBook = await _db.Books.FirstOrDefaultAsync(b => b.BookId == book.BookId);
+			if (existBook == null)
+			{
+				await _db.Books.AddAsync(_mapper.Map<Book>(book));
+			}
+			else
+			{
+				_db.Entry(existBook).CurrentValues.SetValues(book);
+			}
+			await _db.SaveChangesAsync();
+			return new BookOnlyId { BookId = book.BookId };
+		}
+
+		public async Task<BookOnlyId> AddReviewAsync(int id, ReviewDTO review)
+		{
+			var newReview = new Review
+			{
+				BookId = id,
+				Message = review.Message,
+				Reviewer = review.Reviewer,
+			};
+			await _db.Reviews.AddAsync(newReview);
+			await _db.SaveChangesAsync();
+
+			return new BookOnlyId { BookId = newReview.ReviewId };
+		}
+
+		public async Task AddRatingAsync(int id, RatingDTO rating)
+		{
+			var newRating = new Rating
+			{
+				BookId = id,
+				Score = rating.Score,
+			};
+			await _db.Ratings.AddAsync(newRating);
 			await _db.SaveChangesAsync();
 		}
 
@@ -83,10 +124,7 @@ namespace Core
 					ReviewsNumber = reviews.Length
 				});
 			}
-
 			return result;
 		}
-
-
 	}
 }

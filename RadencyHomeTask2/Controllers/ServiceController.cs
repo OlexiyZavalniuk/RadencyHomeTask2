@@ -1,11 +1,11 @@
-﻿using Core;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using System;
 
+using Core;
 using Models;
-using Microsoft.Extensions.Configuration;
 
 namespace RadencyHomeTask2.Controllers
 {
@@ -26,7 +26,7 @@ namespace RadencyHomeTask2.Controllers
 		{
 			return await ExecuteActionAsync(() =>
 			{
-				return _service.GetAllBooksByAuthor(author);
+				return _service.GetAllBooksByAuthorAsync(author);
 			});
 		}
 
@@ -36,7 +36,7 @@ namespace RadencyHomeTask2.Controllers
 		{
 			return await ExecuteActionAsync(() =>
 			{
-				return _service.GetTop10BooksByGenre(genre);
+				return _service.GetTop10BooksByGenreAsync(genre);
 			});
 		}
 
@@ -61,7 +61,45 @@ namespace RadencyHomeTask2.Controllers
 				{
 					throw new Exception("Key not correct");
 				}
-				return _service.DeleteBook(id, key);
+				return _service.DeleteBookAsync(id, key);
+			});
+		}
+
+		[Route("/api/books/save")]
+		[HttpPost]
+		public async Task<IActionResult> CreateBook([FromBody] Book0 book)
+		{
+			return await ExecuteActionAsync(() =>
+			{
+				return _service.CreateBookAsync(book);
+			});
+		}
+
+		[Route("/api/books/{id}/review")]
+		[HttpPut]
+		public async Task<IActionResult> AddReview(int id, [FromBody] ReviewDTO review)
+		{
+			return await ExecuteActionAsync(() =>
+			{
+				return _service.AddReviewAsync(id, review);
+			});
+		}
+
+		[Route("/api/books/{id}/rate")]
+		[HttpPut]
+		public async Task<IActionResult> A(int id, [FromBody] RatingDTO rating)
+		{
+			return await ExecuteActionWithoutResultAsync(() =>
+			{
+				if (rating.Score != Score.norm &&
+					rating.Score != Score.bad &&
+					rating.Score != Score.terrible &&
+					rating.Score != Score.good &&
+					rating.Score != Score.excellent)
+				{
+					throw new Exception("not correct value of rate");
+				}
+				return _service.AddRatingAsync(id, rating);
 			});
 		}
 	}

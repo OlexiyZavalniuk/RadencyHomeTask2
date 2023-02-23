@@ -1,20 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 using Core;
 using Database;
+using AutoMapper;
 
 namespace RadencyHomeTask2
 {
@@ -39,7 +33,10 @@ namespace RadencyHomeTask2
 
 			services.AddTransient<IService, Service>();
 			services.AddDbContext<ApplicationContext>(options => options.UseInMemoryDatabase("BooksDB"));
-
+			services.AddSingleton(new MapperConfiguration(config =>
+			{
+				config.AddProfile(new MappingProfile());
+			}).CreateMapper());
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
