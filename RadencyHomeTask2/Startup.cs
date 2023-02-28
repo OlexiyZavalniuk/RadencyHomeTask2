@@ -48,6 +48,11 @@ namespace RadencyHomeTask2
 				app.UseSwagger();
 				app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RadencyHomeTask2 v1"));
 			}
+			
+			app.UseCors(x => x
+				.AllowAnyOrigin()
+				.AllowAnyMethod()
+				.AllowAnyHeader());
 
 			app.UseHttpsRedirection();
 

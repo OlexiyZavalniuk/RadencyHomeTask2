@@ -6,6 +6,7 @@ using AutoMapper;
 
 using Database;
 using Models;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Core
 {
@@ -27,14 +28,14 @@ namespace Core
 			return await getbooksDTO(books);
 		}
 
-		public async Task<IEnumerable<BookDTO>> GetTop10BooksByGenreAsync(Genre genre)
+		public async Task<IEnumerable<BookDTO>> GetTop10BooksByGenreAsync(string genre)
 		{
 			var books = await _db.Books.Where(b => b.Genre == genre).ToArrayAsync();
 			var booksDTO = await getbooksDTO(books);
 			return booksDTO.Where(b => b.ReviewsNumber > 10).OrderByDescending(b => b.Rating).Take(10).ToArray();
 		}
 
-		public async Task<BookWithReviews> GetBookWithReviewsByIdAsync(int id)
+		public async Task<BookWithReviewsAndGanre> GetBookWithReviewsByIdAsync(int id)
 		{
 			var book = await _db.Books.FirstOrDefaultAsync(b => b.BookId == id);
 
@@ -46,13 +47,14 @@ namespace Core
 			var ratings = await _db.Ratings.Where(r => r.BookId == book.BookId).ToArrayAsync();
 			var reviews = await _db.Reviews.Where(r => r.BookId == book.BookId).ToArrayAsync();
 
-			return new BookWithReviews
+			return new BookWithReviewsAndGanre
 			{
 				BookId = book.BookId,
 				Title = book.Title,
 				Author = book.Author,
 				Content = book.Content,
 				Cover = book.Cover,
+				Genre = book.Genre,
 				Rating = ratings.Length > 0 ? ratings.Sum(r => (decimal)r.Score) / ratings.Length : 0,
 				Reviews = reviews
 			};
@@ -104,6 +106,35 @@ namespace Core
 			};
 			await _db.Ratings.AddAsync(newRating);
 			await _db.SaveChangesAsync();
+		}
+
+		public async Task<IEnumerable<BookWithReviews>> GetAllBooks()
+		{
+			var result = new List<BookWithReviews>();
+			var books = await _db.Books.ToArrayAsync();
+
+			if (books == null)
+			{
+				return null;
+			}
+
+			foreach (var book in books)
+			{
+				var ratings = await _db.Ratings.Where(r => r.BookId == book.BookId).ToArrayAsync();
+				var reviews = await _db.Reviews.Where(r => r.BookId == book.BookId).ToArrayAsync();
+
+				result.Add(new BookWithReviews
+				{
+					BookId = book.BookId,
+					Title = book.Title,
+					Author = book.Author,
+					Content = book.Content,
+					Cover = book.Cover,
+					Rating = ratings.Length > 0 ? ratings.Sum(r => (decimal)r.Score) / ratings.Length : 0,
+					Reviews = reviews
+				});
+			}
+			return result;
 		}
 
 		private async Task<IEnumerable<BookDTO>> getbooksDTO(IEnumerable<Book> books)

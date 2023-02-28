@@ -31,10 +31,10 @@ namespace Database
 				{
 					BookId = 1,
 					Title = "Book1",
-					Cover = "Cover",
+					Cover = "",
 					Content = "Content",
 					Author = "Author1",
-					Genre = Genre.poetry
+					Genre = "poetry"
 				},
 				new Book
 				{
@@ -43,7 +43,7 @@ namespace Database
 					Cover = "Cover",
 					Content = "Content",
 					Author = "Author1",
-					Genre = Genre.horror,
+					Genre = "horror",
 				},
 				new Book
 				{
@@ -52,7 +52,7 @@ namespace Database
 					Cover = "Cover",
 					Content = "Content",
 					Author = "Author1",
-					Genre = Genre.history
+					Genre = "history"
 				},
 				new Book
 				{
@@ -61,7 +61,7 @@ namespace Database
 					Cover = "Cover",
 					Content = "Content",
 					Author = "Author2",
-					Genre = Genre.poetry
+					Genre = "poetry"
 				},
 				new Book
 				{
@@ -70,7 +70,7 @@ namespace Database
 					Cover = "Cover",
 					Content = "Content",
 					Author = "Author3",
-					Genre = Genre.poetry
+					Genre = "poetry"
 				},
 				new Book
 				{
@@ -79,7 +79,7 @@ namespace Database
 					Cover = "Cover",
 					Content = "Content",
 					Author = "Author4",
-					Genre = Genre.poetry
+					Genre = "poetry"
 				},
 				new Book
 				{
@@ -88,7 +88,7 @@ namespace Database
 					Cover = "Cover",
 					Content = "Content",
 					Author = "Author4",
-					Genre = Genre.poetry
+					Genre = "poetry"
 				},
 				new Book
 				{
@@ -97,7 +97,7 @@ namespace Database
 					Cover = "Cover",
 					Content = "Content",
 					Author = "Author4",
-					Genre = Genre.fantasy
+					Genre = "fantasy"
 				},
 				new Book
 				{
@@ -106,7 +106,7 @@ namespace Database
 					Cover = "Cover",
 					Content = "Content",
 					Author = "Author4",
-					Genre = Genre.fantasy
+					Genre = "fantasy"
 				},
 				new Book
 				{
@@ -115,7 +115,7 @@ namespace Database
 					Cover = "Cover",
 					Content = "Content",
 					Author = "Author4",
-					Genre = Genre.fantasy
+					Genre = "fantasy"
 				});
 
 			modelBuilder.Entity<Rating>().HasData(

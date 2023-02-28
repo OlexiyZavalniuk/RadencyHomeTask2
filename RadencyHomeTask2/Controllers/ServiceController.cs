@@ -24,6 +24,13 @@ namespace RadencyHomeTask2.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetAllBooksByAuthor([FromQuery] string order)
 		{
+			if (string.IsNullOrWhiteSpace(order))
+			{
+				return await ExecuteActionAsync(() =>
+				{
+					return _service.GetAllBooks();
+				});
+			}
 			return await ExecuteActionAsync(() =>
 			{
 				return _service.GetAllBooksByAuthorAsync(order);
@@ -32,7 +39,7 @@ namespace RadencyHomeTask2.Controllers
 
 		[Route("/api/recommended")]
 		[HttpGet]
-		public async Task<IActionResult> GetTop10BooksByGenre([FromQuery] Genre genre)
+		public async Task<IActionResult> GetTop10BooksByGenre([FromQuery] string genre)
 		{
 			return await ExecuteActionAsync(() =>
 			{

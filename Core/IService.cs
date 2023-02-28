@@ -9,9 +9,9 @@ namespace Core
 	{
 		public Task<IEnumerable<BookDTO>> GetAllBooksByAuthorAsync(string author);
 
-		public Task<IEnumerable<BookDTO>> GetTop10BooksByGenreAsync(Genre genre);
+		public Task<IEnumerable<BookDTO>> GetTop10BooksByGenreAsync(string genre);
 
-		public Task<BookWithReviews> GetBookWithReviewsByIdAsync(int id);
+		public Task<BookWithReviewsAndGanre> GetBookWithReviewsByIdAsync(int id);
 
 		public Task DeleteBookAsync(int id);
 
@@ -20,5 +20,7 @@ namespace Core
 		public Task<BookOnlyId> AddReviewAsync(int id, ReviewDTO review);
 
 		public Task AddRatingAsync(int id, RatingDTO rating);
+
+		public Task<IEnumerable<BookWithReviews>> GetAllBooks();
 	}
 }

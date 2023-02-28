@@ -21,7 +21,7 @@ namespace Models
 
 		public string Author { get; set; }
 
-		public Genre Genre { get; set; }
+		public string Genre { get; set; }
 	}
 
 	public enum Genre
@@ -60,6 +60,11 @@ namespace Models
 		public decimal Rating { get; set; }
 
 		public Review[] Reviews { get; set; }
+	}
+
+	public class BookWithReviewsAndGanre: BookWithReviews
+	{
+		public string Genre { get; set; }
 	}
 
 	public class BookOnlyId
